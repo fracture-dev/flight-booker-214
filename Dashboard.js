@@ -55,9 +55,6 @@ const Dashboard = () => {
     // Add total price
     doc.setFontSize(14);
     doc.text(`Total Price: $${flightInfo.totalPrice.toFixed(2)}`, 10, doc.lastAutoTable.finalY + 20);
-
-
-
     // Save the PDF
     doc.save('flight_ticket.pdf');
   };

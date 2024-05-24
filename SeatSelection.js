@@ -3,9 +3,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Wizard from './Wizard';
 
 const SeatSelection = () => {
+  // State to store the selected seats
   const [selectedSeats, setSelectedSeats] = useState([]);
+
+  // Get the current location and navigate function from react-router-dom
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Extract search parameters from the URL
   const searchParams = new URLSearchParams(location.search);
   const passengers = parseInt(searchParams.get('passengers'));
   const price = parseInt(searchParams.get('price'));
@@ -14,14 +19,18 @@ const SeatSelection = () => {
   const departureDate = searchParams.get('departureDate');
   const returnDate = searchParams.get('returnDate');
 
+  // Handle seat click event
   const handleSeatClick = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {
+      // If the seat is already selected, remove it from the selected seats array
       setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
     } else if (selectedSeats.length < passengers) {
+      // If the seat is not selected and the number of selected seats is less than the number of passengers, add it to the selected seats array
       setSelectedSeats([...selectedSeats, seatNumber]);
     }
   };
 
+  // Calculate the total price of the selected seats
   const calculateTotalPrice = () => {
     let totalPrice = 0;
     selectedSeats.forEach((seat) => {
@@ -39,22 +48,31 @@ const SeatSelection = () => {
     return totalPrice;
   };
 
+  // Calculate the additional seat price (total price - base price)
   const calculateSeatPrice = () => {
     const seatPrice = calculateTotalPrice() - price;
     return seatPrice >= 0 ? seatPrice : 0;
   };
 
+  // Calculate the tax amount (assumed 10% tax rate)
   const calculateTax = () => {
-    const taxRate = 0.1; // Assuming a 10% tax rate
+    const taxRate = 0.1;
     return calculateTotalPrice() * taxRate;
   };
 
-  const baggageFee = selectedSeats.length > 0 ? 50 : 0; // Baggage fee of $50 per passenger if seats are selected, otherwise 0
-  const insuranceFee = selectedSeats.length > 0 ? 20 : 0; // Assuming an insurance fee of $20 per passenger
-  const convenienceFee = selectedSeats.length > 0 ? 10 : 0; // Convenience fee of $10 if seats are selected, otherwise 0
+  // Calculate the baggage fee ($50 per passenger if seats are selected, otherwise 0)
+  const baggageFee = selectedSeats.length > 0 ? 50 : 0;
 
-  const totalRows = 20; // Increase the number of rows as needed
+  // Calculate the insurance fee ($20 per passenger)
+  const insuranceFee = selectedSeats.length > 0 ? 20 : 0;
 
+  // Calculate the convenience fee ($10 if seats are selected, otherwise 0)
+  const convenienceFee = selectedSeats.length > 0 ? 10 : 0;
+
+  // Total number of rows in the seat layout
+  const totalRows = 20;
+
+  // Handle the click event of the "Next" button
   const handleNextClick = () => {
     const totalPrice =
       calculateTotalPrice() +
@@ -62,12 +80,15 @@ const SeatSelection = () => {
       baggageFee * passengers +
       insuranceFee * passengers +
       convenienceFee;
+
+    // Navigate to the add-ons page with the calculated price, selected seats, departure and arrival cities, and dates as query parameters
     navigate(
       `/add-ons?price=${totalPrice}&seats=${selectedSeats.join(
         ','
       )}&departure=${departure}&arrival=${arrival}&departureDate=${departureDate}&returnDate=${returnDate}`
     );
   };
+
 
   return (
     <div>
