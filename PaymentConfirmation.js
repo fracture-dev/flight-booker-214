@@ -14,6 +14,7 @@ const PaymentConfirmation = () => {
   const departureDate = searchParams.get('departureDate');
   const arrivalDate = searchParams.get('returnDate');
 
+  // just redirect after 3 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       saveFlightData();
