@@ -2,20 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const LoginPage = () => {
+  // State variables for username, password, and error message
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  // Navigation and location hooks from react-router-dom
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Event handler for username input change
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
 
+  // Event handler for password input change
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
+  // useEffect hook to retrieve flight data from URL query params and store it in local storage
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const totalPrice = parseFloat(searchParams.get('price'));
@@ -39,16 +45,14 @@ const LoginPage = () => {
     localStorage.setItem('flightInfo', JSON.stringify(flightData));
   }, [location.search]);
 
-
-
+  // Event handler for login form submission
   const handleLogin = (e) => {
     e.preventDefault();
     if (username === 'xyz007' && password === 'abcd') {
-      // Login successful
-      
+      // Login successful, navigate to the dashboard page
       navigate('/dashboard');
     } else {
-      // Login failed
+      // Login failed, set error message
       setError('wrong password; dummy user: xyz007 pass: abcd');
     }
   };
